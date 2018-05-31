@@ -1,0 +1,118 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+typedef struct{
+	char nombre[15];
+	float calificacion;
+} Profesor;
+
+Profesor *borrar=NULL;
+
+float averageArray(Profesor *array, int n);
+
+void readArray(Profesor *array, int n);
+
+void mergeArrays(Profesor *arr1, int n1, Profesor *arr2, int n2, Profesor *arrF, int n3);
+
+void sortArray(Profesor *array, int n3);
+void printArray(Profesor *array, int n3);
+
+
+void main(){
+	setbuf(stdout,NULL);
+    int n1, n2, n3;
+    Profesor arr1[20];
+	Profesor arr2[20];
+	Profesor arrF[40];
+    printf("Escribe el numero de profesores que ingresarás: ");
+    scanf("%d",&n1);
+    readArray(arr1,n1);
+    printf("Excribe el numero de profesor que ingresarás: ");
+    scanf("%d",&n2);
+    readArray(arr2,n2);
+	n3=n1+n2;
+mergeArrays(arr1,n1,arr2,n2,arrF,n3);
+sortArray(arrF,n3);
+printArray(arrF,n3);
+}
+
+void readArray(Profesor *array, int n)
+{
+	Profesor *v;
+	Profesor *adios,*adios2;
+	v=array;
+	int o=1,h;
+    for(int i=0;i<n;i++)
+    {
+    	scanf("%s %f",&v[i].nombre,&v[i].calificacion);
+    }
+//	for(int i=0;i<n;i++)
+//	{
+//			if(v[i].nombre==v[i+1].nombre)
+//			{
+//				o++;
+//				h+=v[i+1].calificacion;
+//				v[i+1]=adios;
+//			}
+//
+//		if(o>1){
+//			v[i].calificacion=((v[i].calificacion)+h)/o;
+//		}
+//			o=1;
+//			h=0;
+//		}
+}
+
+void mergeArrays(Profesor *arr1, int n1, Profesor *arr2, int n2, Profesor *arrF, int n3)
+{
+	Profesor *parrF;
+	Profesor *parr1;
+	Profesor *parr2;
+	parrF=arrF;
+	parr1=arr1;
+	parr2=arr2;
+    for(int i=0;i<n1;i++)
+    {
+        parrF[i]=parr1[i];
+    }
+    for(int i=0;i<n2;i++)
+    {
+            parrF[n1+i]=parr2[i];
+
+    }
+
+}
+
+void sortArray(Profesor *array, int n3){
+	Profesor *pnombre;
+	Profesor *aux=NULL;
+	pnombre=array;
+	Profesor swap;
+	for (int i = 0 ; i < n3 - 1; i++)
+	  {
+	    for (int j = 0 ; j < n3 - i - 1; j++)
+	    {
+	      if (array[j].calificacion < array[j+1].calificacion)
+	      {
+	        swap=array[j];
+	        array[j]=array[j+1];
+	        array[j+1]=swap;
+	      }
+	    }
+	  }
+
+}
+
+void printArray(Profesor *array, int n3){
+	printf("RESULTADOS\n");
+	for(int i=0;i<n3;i++)
+	{
+		printf("%s %.1f\n",array[i].nombre,array[i].calificacion);}
+
+}
+
+float averageArray(Profesor *array, int n){
+
+	return n;
+}
