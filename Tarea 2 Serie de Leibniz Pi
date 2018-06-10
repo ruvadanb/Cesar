@@ -1,0 +1,162 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include <windows.h>
+#define MAX 50000000000
+
+typedef struct{
+	unsigned long long int inicio;
+	unsigned long long int fin;
+	float sumaparcial;
+
+}Rango;
+
+DWORD WINAPI funcionpi(void*param);
+
+int main()
+{
+	setbuf(stdout,NULL);
+	HANDLE h1=NULL,h2=NULL,h3=NULL,h4=NULL,h5=NULL,h6=NULL,h7=NULL,h8=NULL,h9=NULL,h10=NULL,h11=NULL,h12=NULL,h13=NULL,h14=NULL,h15=NULL,h16=NULL;
+	int numhilos;
+	float total2,total4,total8,total16;
+	float s1,s2,s3,s4,s5,s6,s7,s8;
+	printf("Cuántos hilos qiueres usar?: ");
+	scanf("%d",&numhilos);
+	clock_t start, stop;
+	int duracion;
+	if (numhilos==1){
+			Rango rango[1]={{1,MAX,0}};
+			start = clock();
+			h1=CreateThread(NULL, 0, funcionpi, (void *)&rango[0], 0, NULL);
+			WaitForSingleObject(h1, INFINITE);
+			stop = clock();
+			duracion = 1000*(stop-start) / CLOCKS_PER_SEC;
+			printf("%.10f\n",rango[0].sumaparcial);
+			printf("Tiempo: %d ms\n",duracion);}
+
+	if (numhilos==2){
+
+				Rango rango[2]={{1,MAX/2,0},{(MAX/2)+1,MAX,0}};
+				start = clock();
+				h1=CreateThread(NULL, 0, funcionpi, (void *)&rango[0], 0, NULL);
+				h2=CreateThread(NULL, 0, funcionpi, (void *)&rango[1], 0, NULL);
+				WaitForSingleObject(h1, INFINITE);
+				WaitForSingleObject(h2, INFINITE);
+				stop = clock();
+				s1=rango[0].sumaparcial;
+				s2=rango[1].sumaparcial;
+				total2=s1+s2;
+				duracion = 1000*(stop-start) / CLOCKS_PER_SEC;
+				printf("%.10f\n",total2);
+				printf("Tiempo: %d ms\n",duracion);}
+
+	if (numhilos==4){
+
+					Rango rango[4]={{1,MAX/4,0},{(MAX/4)+1,MAX/2,0},{(MAX/2)+1,3*MAX/4,0},{(3*MAX/4)+1,MAX,0}};
+					start = clock();
+					h1=CreateThread(NULL, 0, funcionpi, (void *)&rango[0], 0, NULL);
+					h2=CreateThread(NULL, 0, funcionpi, (void *)&rango[1], 0, NULL);
+					h3=CreateThread(NULL, 0, funcionpi, (void *)&rango[2], 0, NULL);
+					h4=CreateThread(NULL, 0, funcionpi, (void *)&rango[3], 0, NULL);
+					WaitForSingleObject(h1, INFINITE);
+					WaitForSingleObject(h2, INFINITE);
+					WaitForSingleObject(h3, INFINITE);
+					WaitForSingleObject(h4, INFINITE);
+					stop = clock();
+					s1=rango[0].sumaparcial;
+					s2=rango[1].sumaparcial;
+					s3=rango[2].sumaparcial;
+					s4=rango[3].sumaparcial;
+					total4=s1+s2+s3+s4;
+					duracion = 1000*(stop-start) / CLOCKS_PER_SEC;
+					printf("%.10f\n",total4);
+					printf("Tiempo: %d ms\n",duracion);}
+
+	if (numhilos==8){
+						Rango rango[8]={{1,MAX/8,0},{(MAX/8)+1,MAX/4,0},{(MAX/4)+1,3*MAX/8,0},{(3*MAX/8)+1,MAX/2,0},{(MAX/2)+1,5*MAX/8,0},{(5*MAX/8)+1,3*MAX/4,0},{(3*MAX/4)+1,7*MAX/8,0},{(7*MAX/8)+1,MAX,0}};
+						start = clock();
+						h1=CreateThread(NULL, 0, funcionpi, (void *)&rango[0], 0, NULL);
+						h2=CreateThread(NULL, 0, funcionpi, (void *)&rango[1], 0, NULL);
+						h3=CreateThread(NULL, 0, funcionpi, (void *)&rango[2], 0, NULL);
+						h4=CreateThread(NULL, 0, funcionpi, (void *)&rango[3], 0, NULL);
+						h5=CreateThread(NULL, 0, funcionpi, (void *)&rango[4], 0, NULL);
+						h6=CreateThread(NULL, 0, funcionpi, (void *)&rango[5], 0, NULL);
+						h7=CreateThread(NULL, 0, funcionpi, (void *)&rango[6], 0, NULL);
+						h8=CreateThread(NULL, 0, funcionpi, (void *)&rango[7], 0, NULL);
+						WaitForSingleObject(h1, INFINITE);
+						WaitForSingleObject(h2, INFINITE);
+						WaitForSingleObject(h3, INFINITE);
+						WaitForSingleObject(h4, INFINITE);
+						WaitForSingleObject(h5, INFINITE);
+						WaitForSingleObject(h6, INFINITE);
+						WaitForSingleObject(h7, INFINITE);
+						WaitForSingleObject(h8, INFINITE);
+						stop = clock();
+						total8=rango[0].sumaparcial+rango[1].sumaparcial+rango[2].sumaparcial+rango[3].sumaparcial+rango[4].sumaparcial+rango[5].sumaparcial+rango[6].sumaparcial+rango[7].sumaparcial;
+						duracion = 1000*(stop-start) / CLOCKS_PER_SEC;
+						printf("%.10f\n",total8);
+						printf("Tiempo: %d ms\n",duracion);}
+
+	if (numhilos==16){
+							Rango rango[16]={{1,MAX/16,0},{(MAX/16)+1,MAX/8,0},{(MAX/8)+1,3*MAX/16,0},{(3*MAX/16)+1,MAX/4,0},{(MAX/4)+1,5*MAX/16,0},{(5*MAX/18)+1,6*MAX/16,0},{(6*MAX/16)+1,7*MAX/16,0},{(7*MAX/16)+1,MAX/2,0},{(MAX/2)+1,9*MAX/16,0},{(9*MAX/16)+1,10*MAX/16,0},{(10*MAX/16)+1,11*MAX/16,0},{(11*MAX/16)+1,2*MAX/3,0},{(2*MAX/3)+1,13*MAX/16,0},{(13*MAX/16)+1,7*MAX/8,0},{(7*MAX/8)+1,15*MAX/16,0},{(15*MAX/16)+1,MAX,0}};
+							start = clock();
+							h1=CreateThread(NULL, 0, funcionpi, (void *)&rango[0], 0, NULL);
+							h2=CreateThread(NULL, 0, funcionpi, (void *)&rango[1], 0, NULL);
+							h3=CreateThread(NULL, 0, funcionpi, (void *)&rango[2], 0, NULL);
+							h4=CreateThread(NULL, 0, funcionpi, (void *)&rango[3], 0, NULL);
+							h5=CreateThread(NULL, 0, funcionpi, (void *)&rango[4], 0, NULL);
+							h6=CreateThread(NULL, 0, funcionpi, (void *)&rango[5], 0, NULL);
+							h7=CreateThread(NULL, 0, funcionpi, (void *)&rango[6], 0, NULL);
+							h8=CreateThread(NULL, 0, funcionpi, (void *)&rango[7], 0, NULL);
+							h9=CreateThread(NULL, 0, funcionpi, (void *)&rango[8], 0, NULL);
+							h10=CreateThread(NULL, 0, funcionpi, (void *)&rango[9], 0, NULL);
+							h11=CreateThread(NULL, 0, funcionpi, (void *)&rango[10], 0, NULL);
+							h12=CreateThread(NULL, 0, funcionpi, (void *)&rango[11], 0, NULL);
+							h13=CreateThread(NULL, 0, funcionpi, (void *)&rango[12], 0, NULL);
+							h14=CreateThread(NULL, 0, funcionpi, (void *)&rango[13], 0, NULL);
+							h15=CreateThread(NULL, 0, funcionpi, (void *)&rango[14], 0, NULL);
+							h16=CreateThread(NULL, 0, funcionpi, (void *)&rango[15], 0, NULL);
+
+							WaitForSingleObject(h1, INFINITE);
+							WaitForSingleObject(h2, INFINITE);
+							WaitForSingleObject(h3, INFINITE);
+							WaitForSingleObject(h4, INFINITE);
+							WaitForSingleObject(h5, INFINITE);
+							WaitForSingleObject(h6, INFINITE);
+							WaitForSingleObject(h7, INFINITE);
+							WaitForSingleObject(h9, INFINITE);
+							WaitForSingleObject(h10, INFINITE);
+							WaitForSingleObject(h11, INFINITE);
+							WaitForSingleObject(h12, INFINITE);
+							WaitForSingleObject(h13, INFINITE);
+							WaitForSingleObject(h14, INFINITE);
+							WaitForSingleObject(h15, INFINITE);
+							WaitForSingleObject(h16, INFINITE);
+
+							stop = clock();
+							total16=rango[0].sumaparcial+rango[1].sumaparcial+rango[2].sumaparcial+rango[3].sumaparcial+rango[4].sumaparcial+rango[5].sumaparcial+rango[6].sumaparcial+rango[7].sumaparcial+rango[8].sumaparcial+rango[9].sumaparcial+rango[10].sumaparcial+rango[11].sumaparcial+rango[12].sumaparcial+rango[13].sumaparcial+rango[14].sumaparcial+rango[15].sumaparcial;
+							duracion = 1000*(stop-start) / CLOCKS_PER_SEC;
+							printf("Pi: %.10f\n",total16);
+							printf("Tiempo: %d ms\n",duracion);}
+}
+
+
+DWORD WINAPI funcionpi(void *param){
+	unsigned long long int i;
+	float j;
+	Rango *r=(Rango*)param;
+	j=r->inicio;
+	for(i=r->inicio;i<=r->fin;i++){
+		if(j!=1)
+			j+=1;
+
+		if(((i-1)%2)==0){
+				r->sumaparcial+=(4/j);}
+			else{
+				r->sumaparcial-=(4/j);}
+
+		j++;
+	}
+
+	return 0;
+}
