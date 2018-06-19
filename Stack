@@ -1,0 +1,28 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include "stack.h"
+
+int main(){
+	int n1=1,n2=2,n3=3;
+	Stack s1;
+	s1=createStack;
+	push(s1,(void*)&n1);
+	push(s1,(void*)&n2);
+	push(s1,(void*)&n3);
+	
+	int *r=pop(s1);
+	printf("%d",*r);
+	
+
+	Stack s2;
+	s2=createStack();
+	char t1[]="Hola";
+	char t2[]="ITESo";
+	push(s2,t1);
+	push(s2,t2);
+	
+	strcpy(t2,"tieso");
+	char *rt=pop(s2);
+	printf("\n%s",rt);
+	return 0;
+}
