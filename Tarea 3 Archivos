@@ -1,0 +1,308 @@
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#define NEL -1
+
+typedef struct{
+	int dia,mes,anio;
+}Fecha;
+
+typedef struct {
+	int idCliente;
+	char nombre[10],apellidoP[10],apellidoM[10];
+	Fecha fechaU;
+}Usuario;
+
+void Clientes(char direClientes[100]);
+//void Transacciones();
+//void Cuentas();
+void Menu();
+void NuevoCliente(char direClientes[100]);
+void BuscarCliente(char direClientes[100]);
+char EliminarCliente(char direClientes[100]);
+void ImprimirCliente(char direClientes[100]);
+Usuario *obtenerUsuarios(int *n,char direClientes[100]);
+char existeCliente(int idClienteB, Usuario *usuario, char direClientes[100]);
+int nuevoId(Usuario *usuario, char direClientes[100]);
+char insertarCliente(Usuario usuario, char direClientes[100]);
+
+int main()
+{
+	setbuf(stdout,NULL);
+	char direClientes[100];
+	printf("Escribe la direccion donde quieres guardar los archivos: \n");
+	scanf("%s",direClientes);
+	Menu(direClientes);
+	return 0;
+}
+
+void Menu(char direClientes[100]){
+	char repite=1;
+	int opcion=-1;
+	char direTransacciones[100],direCuentas[100];
+	strcpy(direTransacciones,direClientes);
+	strcpy(direCuentas,direClientes);
+	strcat(direClientes,"\\clientes.dat");
+	strcat(direTransacciones,"\\transacciones.dat");
+	strcat(direCuentas,"\\cuentas.dat");
+	do{
+		system("cls");
+		printf("<<<Sistema MyDB>>>\n\n1) Clientes\n2) Cuentas\n3) Transacciones\n4) Salir\n");
+		printf("\nIngrese su opción: ");
+		scanf("%d", &opcion);
+
+		switch(opcion){
+
+		case 1:
+			Clientes(direClientes);
+			break;
+		case 2:
+//			Cuentas(direCuentas);
+			break;
+		case 3:
+//			Transacciones(direTransacciones);
+			break;
+		case 4:
+			repite=0;
+			break;
+		}
+
+	}while(repite);
+}
+
+void Clientes(char direClientes[100]){
+	int sele=0;
+	printf("\n<CLIENTES>\n\n1) Nuevo Cliente\n2) Buscar Cliente\n3) Eliminar Cliente\n4) Imprimir Cliente");
+	scanf("%d",&sele);
+	switch(sele)
+	{
+	case 1:
+		NuevoCliente(direClientes);
+		break;
+	case 2:
+		BuscarCliente(direClientes);
+		break;
+	case 3:
+		EliminarCliente(direClientes);
+		break;
+	case 4:
+		ImprimirCliente(direClientes);
+		break;
+	}
+}
+
+
+void NuevoCliente(char direClientes[100])
+{
+	setbuf(stdout,NULL);
+	Usuario usuario;
+		printf("Escribe el nombre: ");
+		scanf("%s",&usuario.nombre);
+		printf("Escribe el apellido Paterno: ");
+		scanf("%s",&usuario.apellidoP);
+		printf("Escribe el apellido Materno: ");
+		scanf("%s",&usuario.apellidoM);
+		printf("Escribe el dia de nacimiento: ");
+		scanf("%d",&usuario.fechaU.dia);
+		printf("Escribe el mes de nacimiento: ");
+		scanf("%d",&usuario.fechaU.mes);
+		printf("Escribe el anio de nacimiento: ");
+		scanf("%d",&usuario.fechaU.anio);
+		usuario.idCliente=nuevoId(&usuario,direClientes);
+		if (insertarCliente(usuario,direClientes)) {
+			printf("\n\tEl usuario fue añadido correctamente\n");
+
+		} else {
+			printf("\n\tOcurrió un error al intentar añadir el usuario\n");
+		}
+	}
+
+
+void BuscarCliente(char direClientes[100])
+{
+	Usuario usuario;
+	int idClienteB;
+
+		system("cls");
+		printf("\n\t==> Buscar por id cliente <==\n");
+		printf("\n\tId Cliente: ");
+		scanf("%d", &idClienteB);
+		if (existeCliente(idClienteB, &usuario,direClientes)) {
+
+			printf("\n\tId Clinete: %d\n", usuario.idCliente);
+			printf("\tNombre del Cliente: %s %s %s\n",usuario.nombre,usuario.apellidoP,usuario.apellidoM);
+			printf("\tFecha de nacimiento: %d/%d/%d\n", usuario.fechaU.dia,usuario.fechaU.mes,usuario.fechaU.anio);
+
+		} else {
+			printf("\n\tEl cliente con el id %d no existe\n", idClienteB);
+		}
+
+}
+
+char existeCliente(int idClienteB, Usuario *usuario, char direClientes[100])
+{
+	FILE *archivo;
+	char existe;
+
+	archivo = fopen(direClientes, "rb");
+
+	if (archivo == NULL) {
+		existe = 0;
+
+	} else {
+		existe = 0;
+
+		fread(&(*usuario), sizeof(*usuario), 1, archivo);
+		while (!feof(archivo)) {
+			if ((*usuario).idCliente == idClienteB) {
+				existe = 1;
+				break;
+			}
+			fread(&(*usuario), sizeof(*usuario), 1, archivo);
+		}
+
+		fclose(archivo);
+	}
+
+	return existe;
+}
+
+char EliminarCliente(char direClientes[100])
+{
+	int idClienteBorrar;
+	printf("<<<ELIMINAR CLIENTE>>>\n\n");
+	printf("Escriba el idCliente que quiere eliminar: ");
+	scanf("%d",&idClienteBorrar);
+	FILE *archivo;
+	Usuario usuario;
+	char elimina;
+
+	archivo = fopen(direClientes, "r+b");
+
+	if (archivo == NULL) {
+		elimina = 0;
+
+	}
+	else {
+
+		elimina = 0;
+		fread(&usuario, sizeof(usuario), 1, archivo);
+		while (!feof(archivo)) {
+			if (usuario.idCliente == idClienteBorrar) {
+				fseek(archivo, ftell(archivo) - sizeof(usuario), SEEK_SET);
+				usuario.idCliente = NEL;
+				fwrite(&usuario, sizeof(usuario), 1, archivo);
+				elimina = 1;
+				break;
+			}
+			fread(&usuario, sizeof(usuario), 1, archivo);
+		}
+		fclose(archivo);
+	}
+
+	return elimina;
+}
+
+void ImprimirCliente(char direClientes[100])
+{
+	Usuario *usuarios;
+	int numeroUsuarios;
+	int i;
+
+	system("cls");
+	usuarios = obtenerUsuarios(&numeroUsuarios,direClientes);
+
+	if (numeroUsuarios == 0) {
+		printf("\n\tEl archivo está vacío!!\n");
+		system("pause>nul");
+
+	} else {
+		printf("\n\t\t         LISTA DE CLIENTES REGISTRADOS \n");
+		printf(" ------------------------------------------------------------------------------\n");
+		printf("ID CLIENT    NOMBRE     APELLIDOS PATERNO Y MATERO     FECHA DE NACIMIENTO\n");
+		printf(" ------------------------------------------------------------------------------\n");
+
+		for (i = 0; i < numeroUsuarios; i++) {
+			if (usuarios[i].idCliente != NEL) {
+				printf("    %d      %s        %s   %s            %d/%d/%d\n", usuarios[i].idCliente, usuarios[i].nombre, usuarios[i].apellidoP, usuarios[i].apellidoM, usuarios[i].fechaU.dia,usuarios[i].fechaU.mes,usuarios[i].fechaU.anio);
+			}
+		}
+		printf(" ------------------------------------------------------------------------------\n");
+	}
+}
+
+Usuario *obtenerUsuarios(int *n,char direClientes[100])
+{
+	FILE *archivo;
+	Usuario usuario;
+	Usuario *usuarios;
+	int i;
+
+	archivo = fopen(direClientes, "rb");
+
+	if (archivo == NULL) {
+		*n = 0;
+		usuarios = NULL;
+
+	} else {
+
+		fseek(archivo, 0, SEEK_END);
+		*n = ftell(archivo) / sizeof(Usuario);
+		usuarios = (Usuario *)malloc((*n) * sizeof(Usuario));
+
+		fseek(archivo, 0, SEEK_SET);
+		fread(&usuario, sizeof(usuario), 1, archivo);
+		i = 0;
+		while (!feof(archivo)) {
+			usuarios[i++] = usuario;
+			fread(&usuario, sizeof(usuario), 1, archivo);
+		}
+
+		fclose(archivo);
+	}
+
+	return usuarios;
+}
+
+int nuevoId(Usuario *usuario, char direClientes[100]){
+	FILE *archivo;
+	int nuevoid=1;
+
+	archivo = fopen(direClientes, "rb");
+
+	if (archivo == NULL) {
+		nuevoid = 1;
+
+	} else {
+		nuevoid = 2;
+		fread(&(*usuario), sizeof(*usuario), 1, archivo);
+		while (!feof(archivo)) {
+			if ((*usuario).idCliente <= nuevoid) {
+				nuevoid++;
+			}
+			fread(&(*usuario), sizeof(*usuario), 1, archivo);
+		}
+
+		fclose(archivo);
+	}
+	return nuevoid;
+}
+
+char insertarCliente(Usuario usuario,char direClientes[100]){
+	FILE *archivo;
+	char valor;
+
+	archivo = fopen(direClientes, "ab");
+
+	if (archivo == NULL) {
+		valor = 0;
+
+	} else {
+		fwrite(&usuario, sizeof(usuario), 1, archivo);
+		valor = 1;
+
+		fclose(archivo);
+	}
+
+	return valor;
+}
