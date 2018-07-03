@@ -1,0 +1,111 @@
+bool balancedBrackets(char* exp){
+	Stack stack=createStack();
+	char *temp=(char*)malloc(sizeof(exp));
+	strcpy(temp,exp);
+	int par=0,par1=0,cor=0,cor1=0,ban;
+	char *data;
+
+	for(int i=0;i<MAX;i++)
+	{
+		if((temp[i]==41)|(temp[i]==91)|(temp[i]==41)|(temp[i]==93)){
+			ban=1;}
+	}
+	if(ban){
+
+	for(int i=0;i<MAX;i++){
+		if(temp[i]==40){
+			push(stack, (void*)&temp[i]);
+			par++;}
+		if(temp[i]==91){
+			push(stack, (void*)&temp[i]);
+			cor++;}
+		if(temp[i]==41){
+			par1++;
+			data=pop(stack);
+	}
+		if(temp[i]==93){
+			cor1++;
+			data=pop(stack);
+		}
+		data=NULL;
+	}
+	free(temp);
+	if(cor1-cor==0 && par1-par==0){
+		return true;}
+	else
+		return false;
+	}
+	else
+		return false;
+
+}
+
+
+char* InfixToPosfix(char* exp){
+
+	char *temp=(char*)malloc(sizeof(exp));
+	strcpy(temp,exp);
+	Queue nuevo;
+	nuevo=queue_create();
+	Stack Nstack;
+	Nstack=createStack;
+
+	return temp;
+}
+
+
+
+
+
+
+
+
+
+bool hasHigherPrecedence(char* top, char *operator){
+	char tempTop=*top;
+	char tempOpe=*operator;
+	switch(tempTop){
+	case 42:
+		if(tempOpe==43)
+			return true;
+		if(tempOpe==42)
+			return false;
+		if(tempOpe==94)
+			return false;
+		if(tempOpe==45)
+			return true;
+		break;
+	case 43:
+		if(tempOpe==42)
+			return false;
+		if(tempOpe==43)
+			return false;
+		if(tempOpe==94)
+			return false;
+		if(tempOpe==45)
+			return false;
+		break;
+	case 45:
+		if(tempOpe==42)
+			return false;
+		if(tempOpe==43)
+			return false;
+		if(tempOpe==94)
+			return false;
+		if(tempOpe==45)
+			return false;
+		break;
+
+	case 94:
+		if(tempOpe==42)
+			return true;
+		if(tempOpe==43)
+			return true;
+		if(tempOpe==94)
+			return true;
+		if(tempOpe==45)
+			return true;
+		break;
+	}
+
+}
