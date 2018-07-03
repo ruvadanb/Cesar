@@ -1,3 +1,11 @@
+#include <stdio.h>
+#include <stslib.h>
+#include<string.h>
+#include "Stack.h"
+#define MAX 20
+
+
+
 bool balancedBrackets(char* exp){
 	Stack stack=createStack();
 	char *temp=(char*)malloc(sizeof(exp));
