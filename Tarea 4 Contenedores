@@ -41,17 +41,13 @@ bool balancedBrackets(char* exp){
 }
 
 
-char* InfixToPosfix(char* exp){
 
-	char *temp=(char*)malloc(sizeof(exp));
-	strcpy(temp,exp);
-	Queue nuevo;
-	nuevo=queue_create();
-	Stack Nstack;
-	Nstack=createStack;
 
-	return temp;
-}
+
+
+
+
+
 
 
 
