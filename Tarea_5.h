@@ -6,7 +6,6 @@ typedef void * Type;
 typedef struct strGraph *Graph;
 typedef void (*Print) (Type);
 typedef int (*CMP)(Type, Type);
-typedef unsigned short(*Index)(Type,unsigned);
 
 Graph graph_create(CMP comparator, Print print, Index index);
 void graph_destroy(Graph g);
