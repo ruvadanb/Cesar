@@ -14,13 +14,11 @@ struct strGraph{
 	Vertex *vertex;	//Arreglo de vértices, número de nodos en el grafo
 	unsigned Size; //número de aristas
 	unsigned Order; //número de vértices
-	unsigned limit;//Control de arreglo de vertex
 	Print myPrint; //Funciones asociadas
 	CMP myCmp;
-	Index getIndex;
 };
 
-Graph graph_create(CMP comparator, Print print, Index index ){
+Graph graph_create(CMP comparator, Print print){
 	Graph new = (Graph)malloc(sizeof(struct strGraph));
 	if(!new) return NULL;
 	new->myCmp = comparator;
@@ -28,7 +26,6 @@ Graph graph_create(CMP comparator, Print print, Index index ){
 	new->getIndex = index;
 	new->Order = 0;
 	new->Size = 0;
-	new->limit = 100;
 	new->vertex = NULL;
 	//new->vertex = (Vertex*)calloc(new->limit,sizeof(Vertex));
 	return new;
